@@ -846,6 +846,7 @@ impl<'a> Parser<'a> {
             SyntaxKind::TerminalTrue => Some(self.take::<TerminalTrue>().into()),
             SyntaxKind::TerminalLiteralNumber => Some(self.take::<TerminalLiteralNumber>().into()),
             SyntaxKind::TerminalShortString => Some(self.take::<TerminalShortString>().into()),
+            SyntaxKind::TerminalString => Some(self.take::<TerminalString>().into()),
             SyntaxKind::TerminalLParen => {
                 // Note that LBrace is allowed inside parenthesis, even if `lbrace_allowed` is
                 // [LbraceAllowed::Forbid].
@@ -1245,6 +1246,7 @@ impl<'a> Parser<'a> {
         Some(match self.peek().kind {
             SyntaxKind::TerminalLiteralNumber => self.take::<TerminalLiteralNumber>().into(),
             SyntaxKind::TerminalShortString => self.take::<TerminalShortString>().into(),
+            SyntaxKind::TerminalString => self.take::<TerminalString>().into(),
             SyntaxKind::TerminalUnderscore => self.take::<TerminalUnderscore>().into(),
             SyntaxKind::TerminalIdentifier => {
                 // TODO(ilya): Consider parsing a single identifier as PatternIdentifier rather
@@ -1666,6 +1668,7 @@ impl<'a> Parser<'a> {
                 ExprUnary::new_green(self.db, minus, literal).into()
             }
             SyntaxKind::TerminalShortString => self.take::<TerminalShortString>().into(),
+            SyntaxKind::TerminalString => self.take::<TerminalString>().into(),
             SyntaxKind::TerminalLBrace => self.parse_block().into(),
             _ => self.try_parse_type_expr()?,
         };

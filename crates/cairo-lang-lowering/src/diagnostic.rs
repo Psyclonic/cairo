@@ -90,6 +90,7 @@ impl DiagnosticEntry for LoweringDiagnostic {
             LoweringDiagnosticKind::MemberPathLoop => {
                 "Currently, loops must change the entire variable.".into()
             }
+            LoweringDiagnosticKind::UnsupportedString => "Strings are not yet supported.".into(),
         }
     }
 
@@ -124,4 +125,6 @@ pub enum LoweringDiagnosticKind {
     UnsupportedMatchArmOutOfOrder,
     CannotInlineFunctionThatMightCallItself,
     MemberPathLoop,
+    // TODO(yuval): Remove once supported.
+    UnsupportedString,
 }

@@ -481,6 +481,7 @@ fn lower_expr(
             Ok(LoweredExpr::Member(member_path, ctx.get_location(expr.stable_ptr.untyped())))
         }
         semantic::Expr::Literal(expr) => lower_expr_literal(ctx, expr, builder),
+        semantic::Expr::StringLiteral(expr) => lower_expr_string_literal(ctx, expr, builder),
         semantic::Expr::MemberAccess(expr) => lower_expr_member_access(ctx, expr, builder),
         semantic::Expr::StructCtor(expr) => lower_expr_struct_ctor(ctx, expr, builder),
         semantic::Expr::EnumVariantCtor(expr) => lower_expr_enum_ctor(ctx, expr, builder),
@@ -528,6 +529,18 @@ fn lower_expr_literal(
         generators::Literal { value: expr.value.clone(), ty: expr.ty, location }
             .add(ctx, &mut builder.statements),
     ))
+}
+
+fn lower_expr_string_literal(
+    ctx: &mut LoweringContext<'_, '_>,
+    expr: &semantic::ExprStringLiteral,
+    _builder: &mut BlockBuilder,
+) -> LoweringResult<LoweredExpr> {
+    log::trace!("Lowering a string literal: {:?}", expr.debug(&ctx.expr_formatter));
+    // TODO(yuval): implement lowering of strings
+    return Err(LoweringFlowError::Failed(
+        ctx.diagnostics.report(expr.stable_ptr.untyped(), UnsupportedString),
+    ));
 }
 
 fn lower_expr_constant(

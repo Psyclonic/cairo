@@ -221,7 +221,6 @@ type usize = u32;
 // Span.
 use array::Span;
 
-
 // Dictionary.
 mod dict;
 use dict::{
@@ -235,6 +234,10 @@ use result::Result;
 // Option.
 mod option;
 use option::Option;
+
+// String.
+mod string;
+use string::String;
 
 // Clone.
 mod clone;

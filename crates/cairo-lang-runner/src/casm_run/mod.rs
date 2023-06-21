@@ -1728,6 +1728,7 @@ pub fn execute_core_hint(
                 if excluded_arc != 1 { Felt252::from(1) } else { Felt252::from(0) }
             )?;
         }
+        // TODO(yuval): support printing strings.
         CoreHint::DebugPrint { start, end } => {
             let as_relocatable = |vm, value| {
                 let (base, offset) = extract_buffer(value);

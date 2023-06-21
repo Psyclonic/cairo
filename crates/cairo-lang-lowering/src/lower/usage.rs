@@ -194,7 +194,7 @@ impl BlockUsages {
                     .usage
                     .insert(MemberPath::Var(expr.var), ExprVarMemberPath::Var(expr.clone()));
             }
-            Expr::Literal(_) => {}
+            Expr::Literal(_) | Expr::StringLiteral(_) => {}
             Expr::MemberAccess(expr) => {
                 if let Some(member_path) = &expr.member_path {
                     current.usage.insert(member_path.into(), member_path.clone());

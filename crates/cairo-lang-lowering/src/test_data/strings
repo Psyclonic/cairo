@@ -1,0 +1,83 @@
+//! > Test strings.
+
+//! > test_runner_name
+test_function_lowering
+
+//! > function
+fn foo() -> String {
+    let x = "hello";
+    x
+}
+
+//! > function_name
+foo
+
+//! > module_code
+
+//! > semantic_diagnostics
+
+//! > lowering_diagnostics
+error: Strings are not yet supported.
+ --> lib.cairo:2:13
+    let x = "hello";
+            ^*****^
+
+//! > lowering_flat
+Parameters:
+
+//! > ==========================================================================
+
+//! > Test strings 2.
+
+//! > test_runner_name
+test_function_lowering
+
+//! > function
+fn foo() -> String {
+    let y: core::string::String = "";
+    y
+}
+
+//! > function_name
+foo
+
+//! > module_code
+
+//! > semantic_diagnostics
+
+//! > lowering_diagnostics
+error: Strings are not yet supported.
+ --> lib.cairo:2:35
+    let y: core::string::String = "";
+                                  ^^
+
+//! > lowering_flat
+Parameters:
+
+//! > ==========================================================================
+
+//! > Test strings 3.
+
+//! > test_runner_name
+test_function_lowering
+
+//! > function
+fn foo() -> String {
+    "hello"
+}
+
+//! > function_name
+foo
+
+//! > module_code
+
+//! > semantic_diagnostics
+
+//! > lowering_diagnostics
+error: Strings are not yet supported.
+ --> lib.cairo:2:5
+    "hello"
+    ^*****^
+
+//! > lowering_flat
+Parameters:

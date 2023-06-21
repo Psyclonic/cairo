@@ -29,12 +29,13 @@ use super::inference::solver::SolutionSet;
 use super::inference::{Inference, InferenceError};
 use super::objects::*;
 use super::pattern::{
-    Pattern, PatternEnumVariant, PatternLiteral, PatternOtherwise, PatternTuple, PatternVariable,
+    Pattern, PatternEnumVariant, PatternLiteral, PatternOtherwise, PatternStringLiteral,
+    PatternTuple, PatternVariable,
 };
 use crate::corelib::{
     core_binary_operator, core_bool_ty, core_unary_operator, false_literal_expr, get_core_trait,
-    get_index_operator_impl, never_ty, true_literal_expr, try_get_core_ty_by_name, unit_ty,
-    unwrap_error_propagation_type, validate_literal,
+    get_core_ty_by_name, get_index_operator_impl, never_ty, true_literal_expr,
+    try_get_core_ty_by_name, unit_ty, unwrap_error_propagation_type, validate_literal,
 };
 use crate::db::SemanticGroup;
 use crate::diagnostic::SemanticDiagnosticKind::*;
@@ -225,6 +226,9 @@ pub fn maybe_compute_expr_semantic(
         }
         ast::Expr::ShortString(literal_syntax) => {
             Ok(Expr::Literal(short_string_to_semantic(ctx, literal_syntax)?))
+        }
+        ast::Expr::String(literal_syntax) => {
+            Ok(Expr::StringLiteral(string_literal_to_semantic(ctx, literal_syntax)))
         }
         ast::Expr::False(syntax) => Ok(false_literal_expr(ctx, syntax.stable_ptr().into())),
         ast::Expr::True(syntax) => Ok(true_literal_expr(ctx, syntax.stable_ptr().into())),
@@ -990,6 +994,15 @@ fn compute_pattern_semantic(
                 stable_ptr: short_string_pattern.stable_ptr().into(),
             })
         }
+        ast::Pattern::String(_string_pattern) => {
+            todo!();
+            // TODO(yg/yuval): support string patterns.
+            // let literal = string_literal_to_semantic(ctx, &string_pattern);
+            // Pattern::StringLiteral(PatternStringLiteral {
+            //     literal,
+            //     stable_ptr: string_pattern.stable_ptr().into(),
+            // })
+        }
         ast::Pattern::Enum(enum_pattern) => {
             // Peel all snapshot wrappers.
             let (n_snapshots, long_ty) = peel_snapshots(ctx.db, ty);
@@ -1358,6 +1371,20 @@ fn short_string_to_semantic(
     let suffix = suffix.as_ref().map(SmolStr::as_str);
 
     new_literal_expr(ctx, suffix, value, short_string_syntax.stable_ptr().into())
+}
+
+/// Creates the semantic model of a string literal from its AST.
+fn string_literal_to_semantic(
+    ctx: &mut ComputationContext<'_>,
+    string_syntax: &ast::TerminalString,
+) -> ExprStringLiteral {
+    let db = ctx.db;
+    let syntax_db = db.upcast();
+
+    let value = string_syntax.string_value(syntax_db).unwrap_or_default();
+    let ty = get_core_ty_by_name(ctx.db, "String".into(), Vec::new());
+
+    ExprStringLiteral { value, stable_ptr: string_syntax.stable_ptr().into(), ty }
 }
 
 /// Given an expression syntax, if it's an identifier, returns it. Otherwise, returns the proper
