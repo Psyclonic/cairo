@@ -619,6 +619,10 @@ fn sint_libfunc_cost<TSintTraits: SintTraits + IsZeroTraits + IntMulTraits>(
             ConstCost { steps: 6, holes: 0, range_checks: 1 }.into(),
             ConstCost { steps: 6, holes: 0, range_checks: 1 }.into(),
         ],
+        SintConcrete::Diff(_) => vec![
+            (ConstCost { steps: 3, holes: 0, range_checks: 1 }).into(),
+            (ConstCost { steps: 5, holes: 0, range_checks: 1 }).into(),
+        ],
     }
 }
 
@@ -645,6 +649,10 @@ fn s128_libfunc_cost(libfunc: &Sint128Concrete) -> Vec<BranchCost> {
             ConstCost { steps: 4, holes: 0, range_checks: 1 }.into(),
             ConstCost { steps: 6, holes: 0, range_checks: 1 }.into(),
             ConstCost { steps: 6, holes: 0, range_checks: 1 }.into(),
+        ],
+        Sint128Concrete::Diff(_) => vec![
+            ConstCost { steps: 3, holes: 0, range_checks: 1 }.into(),
+            ConstCost { steps: 5, holes: 0, range_checks: 1 }.into(),
         ],
     }
 }
